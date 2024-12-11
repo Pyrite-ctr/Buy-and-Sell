@@ -1,0 +1,72 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Scanner;
+
+public class Main {
+
+    private int quantity;   // Количество товаров
+    private double price;   // Цена одного товара
+    private double discount; // Скидка на товар (в процентах)
+
+    public Main(int quantity, double price, double discount) {
+        this.quantity = quantity;
+        this.price = price;
+        this.discount = discount;
+    }
+
+    // Рассчитывает и возвращает общую сумму покупки без скидки
+    public double calculateTotalWithoutDiscount() {
+        return quantity * price;
+    }
+
+    // Рассчитывает и возвращает общую сумму покупки со скидкой
+    public double calculateTotalWithDiscount() {
+        double totalWithDiscount = calculateTotalWithoutDiscount() * (1 - discount / 100);
+        return round(totalWithDiscount, 2);
+    }
+
+    // Округляет число до указанного количества знаков после запятой
+    private static double round(double value, int places) {
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    // Метод main для запуска программы
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Введите данные для трёх товаров:");
+
+        for (int i = 1; i <= 3; i++) {
+            System.out.printf("Товар %d:%n", i);
+
+            // Ввод количества
+            System.out.print("Количество товаров: ");
+            int quantity = scanner.nextInt();
+
+            // Ввод цены
+            System.out.print("Цена одного товара: ");
+            double price = scanner.nextDouble();
+
+            // Ввод скидки
+            System.out.print("Скидка (в процентах): ");
+            double discount = scanner.nextDouble();
+
+            try {
+                // Создание объекта товара и вывод результата
+                Main product = new Main(quantity, price, discount);
+                System.out.printf(
+                    "Сумма без скидки: %.2f, Сумма со скидкой: %.2f%n",
+                    product.calculateTotalWithoutDiscount(),
+                    product.calculateTotalWithDiscount()
+                );
+            } catch (IllegalArgumentException e) {
+                System.out.println("Ошибка: " + e.getMessage());
+            }
+            System.out.println();
+        }
+
+        scanner.close();
+    }
+}
